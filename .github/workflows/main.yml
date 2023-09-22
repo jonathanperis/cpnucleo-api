@@ -38,4 +38,4 @@ jobs:
         updateAssemblyInfo: true
 
     - name: Build project
-      run: dotnet build --configuration Release --no-restore /p:Version=${{ env.GitVersion_NuGetVersion }} /p:SourceLinkCreate=true /p:PublicRelease=true
+      run: dotnet build --configuration Release --no-restore /p:Version=${{ env.GitVersion_SemVer }} /p:SourceLinkCreate=true /p:PublicRelease=true
