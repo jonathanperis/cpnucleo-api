@@ -44,3 +44,10 @@ jobs:
     - name: Unit Tests
       working-directory: "./src/Cpnucleo.Application.Test"
       run: dotnet test   
+
+    - name: Architecture Tests
+      working-directory: "./src/Cpnucleo.Architecture.Test"
+      run: dotnet test
+
+    - name: Publish project
+      run: dotnet publish --configuration Release --output .\bin\publish
