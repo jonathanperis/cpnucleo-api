@@ -8,6 +8,7 @@ on:
 
 jobs:
   build:
+    # Using Windows temporarily due to a problem restoring the Mediator package using Linux.
     runs-on: windows-latest
     defaults:
       run:
@@ -39,3 +40,7 @@ jobs:
 
     - name: Build project
       run: dotnet build --configuration Release --no-restore /p:Version=${{ env.GitVersion_SemVer }} /p:SourceLinkCreate=true /p:PublicRelease=true
+
+    - name: Unit Tests
+      working-directory: "./src/Cpnucleo.Application.Test"
+      run: dotnet test   
