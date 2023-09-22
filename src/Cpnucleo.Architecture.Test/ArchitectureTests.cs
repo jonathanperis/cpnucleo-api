@@ -5,7 +5,7 @@ public class ArchitectureTests
     private const string DomainNamespace = "Cpnucleo.Domain";
     private const string ApplicationNamespace = "Cpnucleo.Application";
     private const string InfrastructureNamespace = "Cpnucleo.Infrastructure";
-    private const string ServicesNamespace = "Cpnucleo.GRPC";
+    private const string ServicesNamespace = "Cpnucleo.API";
 
     [Fact]
     public void Domain_Should_Not_HaveDependencyOnOtherProjects()
@@ -80,13 +80,13 @@ public class ArchitectureTests
     public void Services_Should_HaveDependencyOnMediator()
     {
         // Arrange
-        var assembly = typeof(GRPC.Services.SistemaGrpcService).Assembly;
+        var assembly = typeof(API.Controllers.V1.SistemaController).Assembly;
 
         // Act
         var testResult = Types
             .InAssembly(assembly)
             .That()
-            .HaveNameEndingWith("Service")
+            .HaveNameEndingWith("Controller")
             .Should()
             .HaveDependencyOn("Mediator")
             .GetResult();
