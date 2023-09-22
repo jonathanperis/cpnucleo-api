@@ -39,6 +39,3 @@ jobs:
 
     - name: Build project
       run: dotnet build --configuration Release --no-restore /p:Version=${{ env.GitVersion_NuGetVersion }} /p:SourceLinkCreate=true /p:PublicRelease=true
-
-    # - name: Publish
-    # run: dotnet nuget push "bin/Release/Cpnucleo.Shared.${{ env.GitVersion_NuGetVersion }}.nupkg" -k ${{ secrets.NUGET_TOKEN }} -s https://api.nuget.org/v3/index.json
