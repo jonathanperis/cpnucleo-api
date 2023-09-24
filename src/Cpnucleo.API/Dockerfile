@@ -12,10 +12,6 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-ENV DB_CONNECTION_STRING=$DB_CONNECTION_STRING
-ENV QUEUE_CONNECTION_STRING=$QUEUE_CONNECTION_STRING
-ENV SIGNALR_CONNECTION_STRING=$SIGNALR_CONNECTION_STRING
-
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
@@ -36,12 +32,9 @@ FROM build AS publish
 RUN dotnet publish "Cpnucleo.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 # temp
-RUN dotnet user-secrets init
-
-# temp
-RUN dotnet user-secrets set "ConnectionStrings:DefaultConnection" $env:DB_CONNECTION_STRING
-RUN dotnet user-secrets set "AzureSignalR_DefaultConnection" $env:QUEUE_CONNECTION_STRING
-RUN dotnet user-secrets set "AzureServiceBus_DefaultConnection" $env:SIGNALR_CONNECTION_STRING
+RUN dotnet user-secrets set "ConnectionStrings:DefaultConnection" "$DB_CONNECTION_STRING"
+RUN dotnet user-secrets set "AzureSignalR_DefaultConnection" "$QUEUE_CONNECTION_STRING"
+RUN dotnet user-secrets set "AzureServiceBus_DefaultConnection" "$SIGNALR_CONNECTION_STRING"
 
 # temp
 RUN dotnet user-secrets list
