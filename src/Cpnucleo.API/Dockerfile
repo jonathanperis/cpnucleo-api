@@ -41,12 +41,16 @@ RUN echo $env:DB_CONNECTION_STRING
 RUN echo $env:QUEUE_CONNECTION_STRING
 RUN echo $env:SIGNALR_CONNECTION_STRING
 
-# RUN dotnet user-secrets set "ConnectionStrings:DefaultConnection" $env:$DB_CONNECTION_STRING
-# RUN dotnet user-secrets set "AzureSignalR_DefaultConnection" "12345" $env:$QUEUE_CONNECTION_STRING
-# RUN dotnet user-secrets set "AzureServiceBus_DefaultConnection" "12345" $env:$SIGNALR_CONNECTION_STRING
+# temp
+RUN dotnet user-secrets init
 
 # temp
-# RUN dotnet user-secrets list
+RUN dotnet user-secrets set "ConnectionStrings:DefaultConnection" $env:DB_CONNECTION_STRING
+RUN dotnet user-secrets set "AzureSignalR_DefaultConnection" "12345" $env:QUEUE_CONNECTION_STRING
+RUN dotnet user-secrets set "AzureServiceBus_DefaultConnection" "12345" $env:SIGNALR_CONNECTION_STRING
+
+# temp
+RUN dotnet user-secrets list
 
 WORKDIR /app
 COPY --from=publish /app/publish .
