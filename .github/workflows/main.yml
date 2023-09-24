@@ -75,3 +75,6 @@ jobs:
           DB_CONNECTION_STRING=${{ secrets.DB_CONNECTION_STRING }}
           QUEUE_CONNECTION_STRING=${{ secrets.QUEUE_CONNECTION_STRING }}
           SIGNALR_CONNECTION_STRING=${{ secrets.SIGNALR_CONNECTION_STRING }}
+
+    - name: Test Secrets Value
+      run: echo "TEST VAR - ${{ secrets.DB_CONNECTION_STRING }}"
