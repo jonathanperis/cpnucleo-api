@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build-and-test:
+  setup-build-test:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -50,7 +50,7 @@ jobs:
       run: dotnet test
 
   build-docker-image:
-    # needs: build-and-test
+    needs: setup-build-test
     runs-on: ubuntu-latest
 
     steps:
@@ -69,13 +69,7 @@ jobs:
       uses: docker/login-action@v3
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}  
-
-    # - name: Extract metadata (tags, labels) for Docker
-    #   id: meta
-    #   uses: docker/metadata-action@v5
-    #   with:
-    #     images: my-docker-hub-namespace/my-docker-hub-repository        
+        password: ${{ secrets.DOCKERHUB_TOKEN }}    
 
     - name: Build Docker Image
       uses: docker/build-push-action@v5
@@ -83,7 +77,8 @@ jobs:
         context: .
         push: true
         file: ./src/Cpnucleo.API/Dockerfile
-        tags: jonathanperis/cpnucleo-api:${{ github.sha }}
+        # tags: jonathanperis/cpnucleo-api:${{ github.sha }}
+        tags: jonathanperis/cpnucleo-api:latest
         # build-args: |
         #   DB_CONNECTION_STRING=${{ secrets.DB_CONNECTION_STRING }}
         #   QUEUE_CONNECTION_STRING=${{ secrets.QUEUE_CONNECTION_STRING }}
@@ -110,4 +105,4 @@ jobs:
         with:
           app-name: 'cpnucleo-container'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE  }}
-          images: 'index.docker.io/jonathanperis/cpnucleo-api:${{ github.sha }}'
+          images: 'index.docker.io/jonathanperis/cpnucleo-api:latest'
