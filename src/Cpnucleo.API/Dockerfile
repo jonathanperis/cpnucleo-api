@@ -1,11 +1,5 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 
-ARG DB_CONNECTION_STRING
-ARG QUEUE_CONNECTION_STRING="BBBBBBB"
-ARG SIGNALR_CONNECTION_STRING
-ARG SIGNALR_CONNECTION_STRING_2
-ARG SIGNALR_CONNECTION_STRING_3="CCCCCCCCCCCCCCCC"
-
 LABEL maintainer "Jonathan Peris"
 
 USER app
@@ -19,8 +13,6 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG DB_CONNECTION_STRING
 ARG QUEUE_CONNECTION_STRING="BBBBBBB"
 ARG SIGNALR_CONNECTION_STRING
-ARG SIGNALR_CONNECTION_STRING_2
-ARG SIGNALR_CONNECTION_STRING_3="CCCCCCCCCCCCCCCC"
 
 WORKDIR /src
 
@@ -41,47 +33,22 @@ FROM build AS publish
 RUN dotnet publish "Cpnucleo.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 # temp
-RUN dotnet user-secrets set "ConnectionStrings:DefaultConnection" "$env:DB_CONNECTION_STRING"
-RUN dotnet user-secrets set "AzureSignalR_DefaultConnection" "$env:QUEUE_CONNECTION_STRING"
-RUN dotnet user-secrets set "AzureServiceBus_DefaultConnection" "$env:SIGNALR_CONNECTION_STRING"
+RUN dotnet user-secrets set "ConnectionStrings:DefaultConnection" "${DB_CONNECTION_STRING}"
+RUN dotnet user-secrets set "AzureSignalR_DefaultConnection" "${QUEUE_CONNECTION_STRING}"
+RUN dotnet user-secrets set "AzureServiceBus_DefaultConnection" "${SIGNALR_CONNECTION_STRING}"
 
 # temp
 RUN dotnet user-secrets list
 
 # temp
-RUN echo $env:DB_CONNECTION_STRING
-RUN echo $env:QUEUE_CONNECTION_STRING
-RUN echo $env:SIGNALR_CONNECTION_STRING
-RUN echo $env:SIGNALR_CONNECTION_STRING_2
-RUN echo $env:SIGNALR_CONNECTION_STRING_3
-
-# temp
 RUN echo $DB_CONNECTION_STRING
 RUN echo $QUEUE_CONNECTION_STRING
 RUN echo $SIGNALR_CONNECTION_STRING
-RUN echo $SIGNALR_CONNECTION_STRING_2
-RUN echo $SIGNALR_CONNECTION_STRING_3
-
-# temp
-RUN echo $(env:$DB_CONNECTION_STRING)
-RUN echo $(env:$QUEUE_CONNECTION_STRING)
-RUN echo $(env:$SIGNALR_CONNECTION_STRING)
-RUN echo $(env:$SIGNALR_CONNECTION_STRING_2)
-RUN echo $(env:$SIGNALR_CONNECTION_STRING_3)
-
-# temp
-RUN echo $($DB_CONNECTION_STRING)
-RUN echo $($QUEUE_CONNECTION_STRING)
-RUN echo $($SIGNALR_CONNECTION_STRING)
-RUN echo $($SIGNALR_CONNECTION_STRING_2)
-RUN echo $($SIGNALR_CONNECTION_STRING_3)
 
 # temp
 RUN echo "${DB_CONNECTION_STRING}"
 RUN echo "${QUEUE_CONNECTION_STRING}"
 RUN echo "${SIGNALR_CONNECTION_STRING}"
-RUN echo "${SIGNALR_CONNECTION_STRING_2}"
-RUN echo "${SIGNALR_CONNECTION_STRING_3}"
 
 FROM base AS final
 
