@@ -68,10 +68,12 @@ jobs:
     - name: Build Docker Image
       uses: docker/build-push-action@v5
       with:
+        context: .
         # push: true
         file: ./src/Cpnucleo.API/Dockerfile
         tags: cpnucleo/cpnucleo-api:latest
-        build-args: |
-          DB_CONNECTION_STRING=${{ secrets.DB_CONNECTION_STRING }}
-          QUEUE_CONNECTION_STRING=${{ secrets.QUEUE_CONNECTION_STRING }}
-          SIGNALR_CONNECTION_STRING=CCCCCC
+        platforms: linux/amd64,linux/arm64
+        secrets: |
+          "DB_CONNECTION_STRING=${{ secrets.DB_CONNECTION_STRING }}"
+          "QUEUE_CONNECTION_STRING=${{ secrets.QUEUE_CONNECTION_STRING }}"
+          "SIGNALR_CONNECTION_STRING=${{ secrets.SIGNALR_CONNECTION_STRING }}"
