@@ -42,4 +42,4 @@ FROM base AS final
 
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Cpnuc leo.API.dll"]
+ENTRYPOINT ["dotnet", "Cpnucleo.API.dll"]
