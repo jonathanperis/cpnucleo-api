@@ -67,6 +67,7 @@ jobs:
           "SIGNALR_CONNECTION_STRING=${{ secrets.SIGNALR_CONNECTION_STRING }}"
 
   build-docker-image:
+    needs: build-and-test
     runs-on: ubuntu-latest
 
     steps:
