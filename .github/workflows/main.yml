@@ -72,8 +72,9 @@ jobs:
         # push: true
         file: ./src/Cpnucleo.API/Dockerfile
         tags: cpnucleo/cpnucleo-api:latest
-        platforms: linux/amd64,linux/arm64
+        platforms: linux/amd64
         secrets: |
           "DB_CONNECTION_STRING=${{ secrets.DB_CONNECTION_STRING }}"
           "QUEUE_CONNECTION_STRING=${{ secrets.QUEUE_CONNECTION_STRING }}"
           "SIGNALR_CONNECTION_STRING=${{ secrets.SIGNALR_CONNECTION_STRING }}"
+          "SIGNALR_CONNECTION_STRING_2=${{ secrets.SIGNALR_CONNECTION_STRING }}"
