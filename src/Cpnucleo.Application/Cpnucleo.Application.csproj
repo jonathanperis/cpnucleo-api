@@ -10,7 +10,7 @@
 		<PackageReference Include="Cpnucleo.Shared" Version="0.1.595" />
 		<PackageReference Include="Riok.Mapperly" Version="2.7.0" />
 		<PackageReference Include="Ev.ServiceBus" Version="4.8.1" />
-		<PackageReference Include="Mediator.SourceGenerator" Version="2.1.1">
+		<PackageReference Include="Mediator.SourceGenerator" Version="2.1.7">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
