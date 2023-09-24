@@ -10,9 +10,9 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
-ARG DB_CONNECTION_STRING
-ARG QUEUE_CONNECTION_STRING
-ARG SIGNALR_CONNECTION_STRING
+# ARG DB_CONNECTION_STRING
+# ARG QUEUE_CONNECTION_STRING
+# ARG SIGNALR_CONNECTION_STRING
 
 WORKDIR /src
 
@@ -32,13 +32,11 @@ RUN dotnet build "Cpnucleo.API.csproj" -c Release -o /app/build
 FROM build AS publish
 RUN dotnet publish "Cpnucleo.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
-# temp
-RUN dotnet user-secrets set "ConnectionStrings:DefaultConnection" "${DB_CONNECTION_STRING}"
-RUN dotnet user-secrets set "AzureSignalR_DefaultConnection" "${QUEUE_CONNECTION_STRING}"
-RUN dotnet user-secrets set "AzureServiceBus_DefaultConnection" "${SIGNALR_CONNECTION_STRING}"
+# RUN dotnet user-secrets set "ConnectionStrings:DefaultConnection" "${DB_CONNECTION_STRING}"
+# RUN dotnet user-secrets set "AzureSignalR_DefaultConnection" "${QUEUE_CONNECTION_STRING}"
+# RUN dotnet user-secrets set "AzureServiceBus_DefaultConnection" "${SIGNALR_CONNECTION_STRING}"
 
-# temp
-RUN dotnet user-secrets list
+# RUN dotnet user-secrets list
 
 FROM base AS final
 

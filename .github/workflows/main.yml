@@ -83,11 +83,11 @@ jobs:
         context: .
         push: true
         file: ./src/Cpnucleo.API/Dockerfile
-        tags: jonathanperis/cpnucleo-api:latest
-        build-args: |
-          DB_CONNECTION_STRING=${{ secrets.DB_CONNECTION_STRING }}
-          QUEUE_CONNECTION_STRING=${{ secrets.QUEUE_CONNECTION_STRING }}
-          SIGNALR_CONNECTION_STRING=${{ secrets.SIGNALR_CONNECTION_STRING }}
+        tags: jonathanperis/cpnucleo-api:${{ github.sha }}
+        # build-args: |
+        #   DB_CONNECTION_STRING=${{ secrets.DB_CONNECTION_STRING }}
+        #   QUEUE_CONNECTION_STRING=${{ secrets.QUEUE_CONNECTION_STRING }}
+        #   SIGNALR_CONNECTION_STRING=${{ secrets.SIGNALR_CONNECTION_STRING }}
 
     # - name: Update repo description
     #   uses: peter-evans/dockerhub-description@v3
@@ -95,3 +95,19 @@ jobs:
     #     username: ${{ secrets.DOCKERHUB_USERNAME }}
     #     password: ${{ secrets.DOCKERHUB_TOKEN }}
     #     repository: user/app
+
+  deploy-to-azure:
+    runs-on: ubuntu-latest
+    needs: build-docker-image
+    # environment:
+    #   name: 'production'
+    #   url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'cpnucleo-container'
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE  }}
+          images: 'index.docker.io/jonathanperis/cpnucleo-api:${{ github.sha }}'
