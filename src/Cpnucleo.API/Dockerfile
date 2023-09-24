@@ -35,17 +35,13 @@ RUN dotnet build "Cpnucleo.API.csproj" -c Release -o /app/build
 FROM build AS publish
 RUN dotnet publish "Cpnucleo.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
-RUN echo $env:DB_CONNECTION_STRING
-RUN echo $env:QUEUE_CONNECTION_STRING
-RUN echo $env:SIGNALR_CONNECTION_STRING
-
 # temp
 RUN dotnet user-secrets init
 
 # temp
 RUN dotnet user-secrets set "ConnectionStrings:DefaultConnection" $env:DB_CONNECTION_STRING
-RUN dotnet user-secrets set "AzureSignalR_DefaultConnection" "12345" $env:QUEUE_CONNECTION_STRING
-RUN dotnet user-secrets set "AzureServiceBus_DefaultConnection" "12345" $env:SIGNALR_CONNECTION_STRING
+RUN dotnet user-secrets set "AzureSignalR_DefaultConnection" $env:QUEUE_CONNECTION_STRING
+RUN dotnet user-secrets set "AzureServiceBus_DefaultConnection" $env:SIGNALR_CONNECTION_STRING
 
 # temp
 RUN dotnet user-secrets list
