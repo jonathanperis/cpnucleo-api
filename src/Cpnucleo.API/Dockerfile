@@ -1,8 +1,8 @@
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+
 ARG DB_CONNECTION_STRING
 ARG QUEUE_CONNECTION_STRING
 ARG SIGNALR_CONNECTION_STRING
-
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 
 LABEL maintainer "Jonathan Peris"
 
