@@ -37,9 +37,9 @@ RUN dotnet publish "Cpnucleo.API.csproj" -c Release -o /app/publish /p:UseAppHos
 
 FROM base AS final
 
-RUN echo $env:$DB_CONNECTION_STRING
-RUN echo $env:$QUEUE_CONNECTION_STRING
-RUN echo $env:$SIGNALR_CONNECTION_STRING
+RUN echo $env:DB_CONNECTION_STRING
+RUN echo $env:QUEUE_CONNECTION_STRING
+RUN echo $env:SIGNALR_CONNECTION_STRING
 
 # RUN dotnet user-secrets set "ConnectionStrings:DefaultConnection" $env:$DB_CONNECTION_STRING
 # RUN dotnet user-secrets set "AzureSignalR_DefaultConnection" "12345" $env:$QUEUE_CONNECTION_STRING
