@@ -68,7 +68,7 @@ jobs:
     - name: Build Docker Image
       uses: docker/build-push-action@v5
       with:
-        push: true
+        # push: true
         file: ./src/Cpnucleo.API/Dockerfile
         tags: cpnucleo/cpnucleo-api:latest
         secrets: |
