@@ -35,8 +35,6 @@ RUN dotnet build "Cpnucleo.API.csproj" -c Release -o /app/build
 FROM build AS publish
 RUN dotnet publish "Cpnucleo.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
-FROM base AS final
-
 RUN echo $env:DB_CONNECTION_STRING
 RUN echo $env:QUEUE_CONNECTION_STRING
 RUN echo $env:SIGNALR_CONNECTION_STRING
@@ -51,6 +49,8 @@ RUN dotnet user-secrets set "AzureServiceBus_DefaultConnection" "12345" $env:SIG
 
 # temp
 RUN dotnet user-secrets list
+
+FROM base AS final
 
 WORKDIR /app
 COPY --from=publish /app/publish .
