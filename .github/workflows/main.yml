@@ -83,7 +83,7 @@ jobs:
         context: .
         push: true
         file: ./src/Cpnucleo.API/Dockerfile
-        tags: cpnucleo/cpnucleo-api:latest
+        tags: jonathanperis/cpnucleo-api:latest
         build-args: |
           DB_CONNECTION_STRING=${{ secrets.DB_CONNECTION_STRING }}
           QUEUE_CONNECTION_STRING=${{ secrets.QUEUE_CONNECTION_STRING }}
