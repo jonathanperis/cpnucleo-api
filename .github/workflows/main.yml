@@ -68,10 +68,19 @@ jobs:
     - name: Build Docker Image
       uses: docker/build-push-action@v5
       with:
-        # push: true
+        push: true
         file: ./src/Cpnucleo.API/Dockerfile
         tags: cpnucleo/cpnucleo-api:latest
         secrets: |
           "DB_CONNECTION_STRING=${{ secrets.DB_CONNECTION_STRING }}"
           "QUEUE_CONNECTION_STRING=${{ secrets.QUEUE_CONNECTION_STRING }}"
           "SIGNALR_CONNECTION_STRING=${{ secrets.SIGNALR_CONNECTION_STRING }}"
+
+    - name: Test ENV Variable DB_CONNECTION_STRING
+      run: print(os.getenv('INPUT_DB_CONNECTION_STRING'))
+
+    - name: Test ENV Variable QUEUE_CONNECTION_STRING
+      run: print(os.getenv('INPUT_QUEUE_CONNECTION_STRING'))
+
+    - name: Test ENV Variable SIGNALR_CONNECTION_STRING
+      run: print(os.getenv('INPUT_SIGNALR_CONNECTION_STRING'))
