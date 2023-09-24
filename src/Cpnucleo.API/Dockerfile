@@ -11,7 +11,7 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
 ARG DB_CONNECTION_STRING
-ARG QUEUE_CONNECTION_STRING="BBBBBBB"
+ARG QUEUE_CONNECTION_STRING
 ARG SIGNALR_CONNECTION_STRING
 
 WORKDIR /src
@@ -52,6 +52,24 @@ RUN echo "${SIGNALR_CONNECTION_STRING}"
 
 FROM base AS final
 
+ARG DB_CONNECTION_STRING
+ARG QUEUE_CONNECTION_STRING
+ARG SIGNALR_CONNECTION_STRING
+
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+WORKDIR "/app/publish"
+
+# temp
+RUN dotnet user-secrets init
+
+# temp
+RUN dotnet user-secrets set "ConnectionStrings:DefaultConnection" "${DB_CONNECTION_STRING}"
+RUN dotnet user-secrets set "AzureSignalR_DefaultConnection" "${QUEUE_CONNECTION_STRING}"
+RUN dotnet user-secrets set "AzureServiceBus_DefaultConnection" "${SIGNALR_CONNECTION_STRING}"
+
+# temp
+RUN dotnet user-secrets list
+
 ENTRYPOINT ["dotnet", "Cpnucleo.API.dll"]
