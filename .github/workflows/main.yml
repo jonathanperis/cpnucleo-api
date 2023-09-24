@@ -7,14 +7,15 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: "./src/Cpnucleo.API"
 
     steps:
-    - uses: actions/checkout@main
+    - name: Checkout
+      uses: actions/checkout@main
       with:
         fetch-depth: 0
 
@@ -47,6 +48,32 @@ jobs:
     - name: Architecture Tests
       working-directory: "./src/Cpnucleo.Architecture.Test"
       run: dotnet test
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build Docker Image
+      uses: docker/build-push-action@v5
+      with:
+        context: src/Cpnucleo.API/Dockerfile .
+        platforms: linux/amd64,linux/arm64
+        tags: user/app:latest
+        secrets: |
+          "DB_CONNECTION_STRING=${{ secrets.DB_CONNECTION_STRING }}"
+          "QUEUE_CONNECTION_STRING=${{ secrets.QUEUE_CONNECTION_STRING }}"
+          "SIGNALR_CONNECTION_STRING=${{ secrets.SIGNALR_CONNECTION_STRING }}"
+
+  build-docker-image:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@main
+      with:
+        fetch-depth: 0
 
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
