@@ -103,6 +103,6 @@ jobs:
         id: deploy-image-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'cpnucleo-container'
+          app-name: 'api-cpnucleo'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE  }}
           images: 'index.docker.io/jonathanperis/cpnucleo-api:latest'
