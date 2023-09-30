@@ -19,6 +19,8 @@ WORKDIR /src
 # COPY ["src/Cpnucleo.API/bin/publish", "app/publish/"]
 COPY . .
 
+WORKDIR /src/src/Cpnucleo.API/bin
+
 RUN dir -s    
 
 # RUN dotnet user-secrets set "ConnectionStrings:DefaultConnection" "${DB_CONNECTION_STRING}"
