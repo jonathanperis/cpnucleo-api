@@ -18,6 +18,8 @@ WORKDIR /src
 
 COPY ["src/Cpnucleo.API/bin/publish", "./app/publish/"]
 
+RUN dir -s    
+
 # RUN dotnet user-secrets set "ConnectionStrings:DefaultConnection" "${DB_CONNECTION_STRING}"
 # RUN dotnet user-secrets set "AzureSignalR_DefaultConnection" "${QUEUE_CONNECTION_STRING}"
 # RUN dotnet user-secrets set "AzureServiceBus_DefaultConnection" "${SIGNALR_CONNECTION_STRING}"
@@ -25,6 +27,8 @@ COPY ["src/Cpnucleo.API/bin/publish", "./app/publish/"]
 # RUN dotnet user-secrets list
 
 FROM base AS final
+
+RUN dir -s
 
 WORKDIR /app
 COPY --from=publish /app/publish .
