@@ -16,7 +16,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
 WORKDIR /src
 
-COPY . .
+COPY ["src/Cpnucleo.API/bin/publish", "./app/publish/"]
 
 # RUN dotnet user-secrets set "ConnectionStrings:DefaultConnection" "${DB_CONNECTION_STRING}"
 # RUN dotnet user-secrets set "AzureSignalR_DefaultConnection" "${QUEUE_CONNECTION_STRING}"
@@ -27,5 +27,5 @@ COPY . .
 FROM base AS final
 
 WORKDIR /app
-COPY --from=publish /bin/publish .
+COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Cpnucleo.API.dll"]
