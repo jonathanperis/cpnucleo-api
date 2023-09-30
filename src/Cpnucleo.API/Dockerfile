@@ -16,7 +16,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
 WORKDIR /src
 
-COPY ["src/Cpnucleo.API/bin/publish", "./app/publish/"]
+COPY ["src/Cpnucleo.API/bin/publish", "app/publish/"]
 
 RUN dir -s    
 
@@ -31,5 +31,5 @@ FROM base AS final
 RUN dir -s
 
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=publish /src/app/publish .
 ENTRYPOINT ["dotnet", "Cpnucleo.API.dll"]
