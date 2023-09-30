@@ -26,10 +26,10 @@ RUN dir -s
 
 # RUN dotnet user-secrets list
 
-FROM base AS final
+# FROM base AS final
 
-RUN dir -s
+# RUN dir -s
 
-WORKDIR /app
-COPY --from=publish /src/app/publish .
-ENTRYPOINT ["dotnet", "Cpnucleo.API.dll"]
+# WORKDIR /app
+# COPY --from=publish /src/app/publish .
+# ENTRYPOINT ["dotnet", "Cpnucleo.API.dll"]
