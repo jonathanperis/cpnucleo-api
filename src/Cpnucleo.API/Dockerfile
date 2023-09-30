@@ -16,7 +16,8 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
 WORKDIR /src
 
-COPY ["src/Cpnucleo.API/bin/publish", "app/publish/"]
+# COPY ["src/Cpnucleo.API/bin/publish", "app/publish/"]
+COPY . .
 
 RUN dir -s    
 
