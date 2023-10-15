@@ -49,9 +49,6 @@ jobs:
       working-directory: "./src/Cpnucleo.Architecture.Test"
       run: dotnet test
 
-    - name: Publish project
-      run: dotnet publish -c Release -o ./bin/publish /p:UseAppHost=false
-
   build-push-image:
     needs: setup-build-test
     runs-on: ubuntu-latest
