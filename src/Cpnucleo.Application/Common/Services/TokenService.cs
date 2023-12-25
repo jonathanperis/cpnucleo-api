@@ -8,8 +8,9 @@ internal sealed class TokenService
         {
             Subject = new ClaimsIdentity(new Claim[]
             {
-                    new Claim(ClaimTypes.PrimarySid, id)
+                    new(ClaimTypes.PrimarySid, id)
             }),
+            
             NotBefore = DateTime.UtcNow,
             Expires = DateTime.UtcNow.AddSeconds(Convert.ToInt32(expires)),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key)), SecurityAlgorithms.HmacSha256Signature),

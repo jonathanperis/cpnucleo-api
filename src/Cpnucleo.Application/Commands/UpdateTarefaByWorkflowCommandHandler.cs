@@ -1,17 +1,10 @@
 ﻿namespace Cpnucleo.Application.Commands;
 
-public sealed class UpdateTarefaByWorkflowCommandHandler : IRequestHandler<UpdateTarefaByWorkflowCommand, OperationResult>
+public sealed class UpdateTarefaByWorkflowCommandHandler(IApplicationDbContext context) : IRequestHandler<UpdateTarefaByWorkflowCommand, OperationResult>
 {
-    private readonly IApplicationDbContext _context;
-
-    public UpdateTarefaByWorkflowCommandHandler(IApplicationDbContext context)
-    {
-        _context = context;
-    }
-
     public async ValueTask<OperationResult> Handle(UpdateTarefaByWorkflowCommand request, CancellationToken cancellationToken)
     {
-        var tarefa = await _context.Tarefas
+        var tarefa = await context.Tarefas
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
         if (tarefa is null)
@@ -20,11 +13,9 @@ public sealed class UpdateTarefaByWorkflowCommandHandler : IRequestHandler<Updat
         }
 
         tarefa = Tarefa.Update(tarefa, request.IdWorkflow);
-        _context.Tarefas.Update(tarefa);
+        context.Tarefas.Update(tarefa);
 
-        var success = await _context.SaveChangesAsync(cancellationToken);
-
-        var result = success ? OperationResult.Success : OperationResult.Failed;
+        var result = await context.SaveChangesAsync(cancellationToken);
 
         return result;
     }

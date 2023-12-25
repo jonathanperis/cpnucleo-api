@@ -1,17 +1,10 @@
 ﻿namespace Cpnucleo.Application.Queries;
 
-public sealed class GetTipoTarefaQueryHandler : IRequestHandler<GetTipoTarefaQuery, GetTipoTarefaViewModel>
+public sealed class GetTipoTarefaQueryHandler(IApplicationDbContext context) : IRequestHandler<GetTipoTarefaQuery, GetTipoTarefaViewModel>
 {
-    private readonly IApplicationDbContext _context;
-
-    public GetTipoTarefaQueryHandler(IApplicationDbContext context)
-    {
-        _context = context;
-    }
-
     public async ValueTask<GetTipoTarefaViewModel> Handle(GetTipoTarefaQuery request, CancellationToken cancellationToken)
     {
-        var tipoTarefa = await _context.TipoTarefas
+        var tipoTarefa = await context.TipoTarefas
             .AsNoTracking()
             .Where(x => x.Id == request.Id && x.Ativo)
             .Select(x => x.MapToDto())
@@ -19,9 +12,9 @@ public sealed class GetTipoTarefaQueryHandler : IRequestHandler<GetTipoTarefaQue
 
         if (tipoTarefa is null)
         {
-            return new GetTipoTarefaViewModel { OperationResult = OperationResult.NotFound };
+            return new GetTipoTarefaViewModel(OperationResult.NotFound);
         }
 
-        return new GetTipoTarefaViewModel { TipoTarefa = tipoTarefa, OperationResult = OperationResult.Success };
+        return new GetTipoTarefaViewModel(OperationResult.Success, tipoTarefa);
     }
 }

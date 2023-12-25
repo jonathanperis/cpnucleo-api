@@ -1,17 +1,10 @@
 ﻿namespace Cpnucleo.Application.Commands;
 
-public sealed class UpdateSistemaCommandHandler : IRequestHandler<UpdateSistemaCommand, OperationResult>
+public sealed class UpdateSistemaCommandHandler(IApplicationDbContext context) : IRequestHandler<UpdateSistemaCommand, OperationResult>
 {
-    private readonly IApplicationDbContext _context;
-
-    public UpdateSistemaCommandHandler(IApplicationDbContext context)
-    {
-        _context = context;
-    }
-
     public async ValueTask<OperationResult> Handle(UpdateSistemaCommand request, CancellationToken cancellationToken)
     {
-        var sistema = await _context.Sistemas
+        var sistema = await context.Sistemas
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
         if (sistema is null)
@@ -20,11 +13,9 @@ public sealed class UpdateSistemaCommandHandler : IRequestHandler<UpdateSistemaC
         }
 
         sistema = Sistema.Update(sistema, request.Nome, request.Descricao);
-        _context.Sistemas.Update(sistema);
+        context.Sistemas.Update(sistema);
 
-        var success = await _context.SaveChangesAsync(cancellationToken);
-
-        var result = success ? OperationResult.Success : OperationResult.Failed;
+        var result = await context.SaveChangesAsync(cancellationToken);
 
         return result;
     }

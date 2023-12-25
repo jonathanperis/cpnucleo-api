@@ -1,17 +1,10 @@
 ﻿namespace Cpnucleo.Application.Queries;
 
-public sealed class ListImpedimentoQueryHandler : IRequestHandler<ListImpedimentoQuery, ListImpedimentoViewModel>
+public sealed class ListImpedimentoQueryHandler(IApplicationDbContext context) : IRequestHandler<ListImpedimentoQuery, ListImpedimentoViewModel>
 {
-    private readonly IApplicationDbContext _context;
-
-    public ListImpedimentoQueryHandler(IApplicationDbContext context)
-    {
-        _context = context;
-    }
-
     public async ValueTask<ListImpedimentoViewModel> Handle(ListImpedimentoQuery request, CancellationToken cancellationToken)
     {
-        var impedimentos = await _context.Impedimentos
+        var impedimentos = await context.Impedimentos
             .AsNoTracking()
             .Where(x => x.Ativo)
             .OrderBy(x => x.DataInclusao)
@@ -20,9 +13,9 @@ public sealed class ListImpedimentoQueryHandler : IRequestHandler<ListImpediment
 
         if (impedimentos is null)
         {
-            return new ListImpedimentoViewModel { OperationResult = OperationResult.NotFound };
+            return new ListImpedimentoViewModel(OperationResult.NotFound);
         }
 
-        return new ListImpedimentoViewModel { Impedimentos = impedimentos, OperationResult = OperationResult.Success };
+        return new ListImpedimentoViewModel(OperationResult.Success, impedimentos);
     }
 }

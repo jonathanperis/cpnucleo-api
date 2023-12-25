@@ -1,17 +1,10 @@
 ﻿namespace Cpnucleo.Application.Queries;
 
-public sealed class GetTarefaQueryHandler : IRequestHandler<GetTarefaQuery, GetTarefaViewModel>
+public sealed class GetTarefaQueryHandler(IApplicationDbContext context) : IRequestHandler<GetTarefaQuery, GetTarefaViewModel>
 {
-    private readonly IApplicationDbContext _context;
-
-    public GetTarefaQueryHandler(IApplicationDbContext context)
-    {
-        _context = context;
-    }
-
     public async ValueTask<GetTarefaViewModel> Handle(GetTarefaQuery request, CancellationToken cancellationToken)
     {
-        var tarefa = await _context.Tarefas
+        var tarefa = await context.Tarefas
             .AsNoTracking()
             .Include(x => x.Projeto)
             .Include(x => x.Recurso)
@@ -23,9 +16,9 @@ public sealed class GetTarefaQueryHandler : IRequestHandler<GetTarefaQuery, GetT
 
         if (tarefa is null)
         {
-            return new GetTarefaViewModel { OperationResult = OperationResult.NotFound };
+            return new GetTarefaViewModel(OperationResult.NotFound);
         }
 
-        return new GetTarefaViewModel { Tarefa = tarefa, OperationResult = OperationResult.Success };
+        return new GetTarefaViewModel(OperationResult.Success, tarefa);
     }
 }

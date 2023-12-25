@@ -1,17 +1,10 @@
 ﻿namespace Cpnucleo.Application.Queries;
 
-public sealed class ListTipoTarefaQueryHandler : IRequestHandler<ListTipoTarefaQuery, ListTipoTarefaViewModel>
+public sealed class ListTipoTarefaQueryHandler(IApplicationDbContext context) : IRequestHandler<ListTipoTarefaQuery, ListTipoTarefaViewModel>
 {
-    private readonly IApplicationDbContext _context;
-
-    public ListTipoTarefaQueryHandler(IApplicationDbContext context)
-    {
-        _context = context;
-    }
-
     public async ValueTask<ListTipoTarefaViewModel> Handle(ListTipoTarefaQuery request, CancellationToken cancellationToken)
     {
-        var tipoTarefas = await _context.TipoTarefas
+        var tipoTarefas = await context.TipoTarefas
             .AsNoTracking()
             .Where(x => x.Ativo)
             .OrderBy(x => x.DataInclusao)
@@ -20,9 +13,9 @@ public sealed class ListTipoTarefaQueryHandler : IRequestHandler<ListTipoTarefaQ
 
         if (tipoTarefas is null)
         {
-            return new ListTipoTarefaViewModel { OperationResult = OperationResult.NotFound };
+            return new ListTipoTarefaViewModel(OperationResult.NotFound);
         }
 
-        return new ListTipoTarefaViewModel { TipoTarefas = tipoTarefas, OperationResult = OperationResult.Success };
+        return new ListTipoTarefaViewModel(OperationResult.Success, tipoTarefas);
     }
 }

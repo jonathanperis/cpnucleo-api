@@ -1,17 +1,10 @@
 ﻿namespace Cpnucleo.Application.Queries;
 
-public sealed class GetImpedimentoTarefaQueryHandler : IRequestHandler<GetImpedimentoTarefaQuery, GetImpedimentoTarefaViewModel>
+public sealed class GetImpedimentoTarefaQueryHandler(IApplicationDbContext context) : IRequestHandler<GetImpedimentoTarefaQuery, GetImpedimentoTarefaViewModel>
 {
-    private readonly IApplicationDbContext _context;
-
-    public GetImpedimentoTarefaQueryHandler(IApplicationDbContext context)
-    {
-        _context = context;
-    }
-
     public async ValueTask<GetImpedimentoTarefaViewModel> Handle(GetImpedimentoTarefaQuery request, CancellationToken cancellationToken)
     {
-        var impedimentoTarefa = await _context.ImpedimentoTarefas
+        var impedimentoTarefa = await context.ImpedimentoTarefas
             .AsNoTracking()
             .Include(x => x.Tarefa)
             .Where(x => x.Id == request.Id && x.Ativo)
@@ -20,9 +13,9 @@ public sealed class GetImpedimentoTarefaQueryHandler : IRequestHandler<GetImpedi
 
         if (impedimentoTarefa is null)
         {
-            return new GetImpedimentoTarefaViewModel { OperationResult = OperationResult.NotFound };
+            return new GetImpedimentoTarefaViewModel(OperationResult.NotFound);
         }
 
-        return new GetImpedimentoTarefaViewModel { ImpedimentoTarefa = impedimentoTarefa, OperationResult = OperationResult.Success };
+        return new GetImpedimentoTarefaViewModel(OperationResult.Success, impedimentoTarefa);
     }
 }

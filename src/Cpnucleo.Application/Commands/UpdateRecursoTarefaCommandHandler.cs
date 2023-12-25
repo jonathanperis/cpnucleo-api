@@ -1,17 +1,10 @@
 ﻿namespace Cpnucleo.Application.Commands;
 
-public sealed class UpdateRecursoTarefaCommandHandler : IRequestHandler<UpdateRecursoTarefaCommand, OperationResult>
+public sealed class UpdateRecursoTarefaCommandHandler(IApplicationDbContext context) : IRequestHandler<UpdateRecursoTarefaCommand, OperationResult>
 {
-    private readonly IApplicationDbContext _context;
-
-    public UpdateRecursoTarefaCommandHandler(IApplicationDbContext context)
-    {
-        _context = context;
-    }
-
     public async ValueTask<OperationResult> Handle(UpdateRecursoTarefaCommand request, CancellationToken cancellationToken)
     {
-        var recursoTarefa = await _context.RecursoTarefas
+        var recursoTarefa = await context.RecursoTarefas
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
         if (recursoTarefa is null)
@@ -20,11 +13,9 @@ public sealed class UpdateRecursoTarefaCommandHandler : IRequestHandler<UpdateRe
         }
 
         recursoTarefa = RecursoTarefa.Update(recursoTarefa, request.IdRecurso, request.IdTarefa);
-        _context.RecursoTarefas.Update(recursoTarefa);
+        context.RecursoTarefas.Update(recursoTarefa);
 
-        var success = await _context.SaveChangesAsync(cancellationToken);
-
-        var result = success ? OperationResult.Success : OperationResult.Failed;
+        var result = await context.SaveChangesAsync(cancellationToken);
 
         return result;
     }

@@ -1,17 +1,10 @@
 ﻿namespace Cpnucleo.Application.Commands;
 
-public sealed class UpdateApontamentoCommandHandler : IRequestHandler<UpdateApontamentoCommand, OperationResult>
+public sealed class UpdateApontamentoCommandHandler(IApplicationDbContext context) : IRequestHandler<UpdateApontamentoCommand, OperationResult>
 {
-    private readonly IApplicationDbContext _context;
-
-    public UpdateApontamentoCommandHandler(IApplicationDbContext context)
-    {
-        _context = context;
-    }
-
     public async ValueTask<OperationResult> Handle(UpdateApontamentoCommand request, CancellationToken cancellationToken)
     {
-        var apontamento = await _context.Apontamentos
+        var apontamento = await context.Apontamentos
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
         if (apontamento is null)
@@ -20,11 +13,9 @@ public sealed class UpdateApontamentoCommandHandler : IRequestHandler<UpdateApon
         }
 
         apontamento = Apontamento.Update(apontamento, request.Descricao, request.DataApontamento, request.QtdHoras, request.IdTarefa, request.IdRecurso);
-        _context.Apontamentos.Update(apontamento);
+        context.Apontamentos.Update(apontamento);
 
-        var success = await _context.SaveChangesAsync(cancellationToken);
-
-        var result = success ? OperationResult.Success : OperationResult.Failed;
+        var result = await context.SaveChangesAsync(cancellationToken);
 
         return result;
     }

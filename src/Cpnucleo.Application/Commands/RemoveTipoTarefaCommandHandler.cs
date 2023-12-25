@@ -1,17 +1,10 @@
 ﻿namespace Cpnucleo.Application.Commands;
 
-public sealed class RemoveTipoTarefaCommandHandler : IRequestHandler<RemoveTipoTarefaCommand, OperationResult>
+public sealed class RemoveTipoTarefaCommandHandler(IApplicationDbContext context) : IRequestHandler<RemoveTipoTarefaCommand, OperationResult>
 {
-    private readonly IApplicationDbContext _context;
-
-    public RemoveTipoTarefaCommandHandler(IApplicationDbContext context)
-    {
-        _context = context;
-    }
-
     public async ValueTask<OperationResult> Handle(RemoveTipoTarefaCommand request, CancellationToken cancellationToken)
     {
-        var tipoTarefa = await _context.TipoTarefas
+        var tipoTarefa = await context.TipoTarefas
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
         if (tipoTarefa is null)
@@ -20,11 +13,9 @@ public sealed class RemoveTipoTarefaCommandHandler : IRequestHandler<RemoveTipoT
         }
 
         tipoTarefa = TipoTarefa.Remove(tipoTarefa);
-        _context.TipoTarefas.Update(tipoTarefa); //JONATHAN - Soft Delete.
+        context.TipoTarefas.Update(tipoTarefa); //JONATHAN - Soft Delete.
 
-        var success = await _context.SaveChangesAsync(cancellationToken);
-
-        var result = success ? OperationResult.Success : OperationResult.Failed;
+        var result = await context.SaveChangesAsync(cancellationToken);
 
         return result;
     }

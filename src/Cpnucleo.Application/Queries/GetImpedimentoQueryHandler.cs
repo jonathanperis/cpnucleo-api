@@ -1,17 +1,10 @@
 ﻿namespace Cpnucleo.Application.Queries;
 
-public sealed class GetImpedimentoQueryHandler : IRequestHandler<GetImpedimentoQuery, GetImpedimentoViewModel>
+public sealed class GetImpedimentoQueryHandler(IApplicationDbContext context) : IRequestHandler<GetImpedimentoQuery, GetImpedimentoViewModel>
 {
-    private readonly IApplicationDbContext _context;
-
-    public GetImpedimentoQueryHandler(IApplicationDbContext context)
-    {
-        _context = context;
-    }
-
     public async ValueTask<GetImpedimentoViewModel> Handle(GetImpedimentoQuery request, CancellationToken cancellationToken)
     {
-        var impedimento = await _context.Impedimentos
+        var impedimento = await context.Impedimentos
             .AsNoTracking()
             .Where(x => x.Id == request.Id && x.Ativo)
             .Select(x => x.MapToDto())
@@ -19,9 +12,9 @@ public sealed class GetImpedimentoQueryHandler : IRequestHandler<GetImpedimentoQ
 
         if (impedimento is null)
         {
-            return new GetImpedimentoViewModel { OperationResult = OperationResult.NotFound };
+            return new GetImpedimentoViewModel(OperationResult.NotFound);
         }
 
-        return new GetImpedimentoViewModel { Impedimento = impedimento, OperationResult = OperationResult.Success };
+        return new GetImpedimentoViewModel(OperationResult.Success, impedimento);
     }
 }

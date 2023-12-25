@@ -1,17 +1,10 @@
 ﻿namespace Cpnucleo.Application.Commands;
 
-public sealed class UpdateImpedimentoTarefaCommandHandler : IRequestHandler<UpdateImpedimentoTarefaCommand, OperationResult>
+public sealed class UpdateImpedimentoTarefaCommandHandler(IApplicationDbContext context) : IRequestHandler<UpdateImpedimentoTarefaCommand, OperationResult>
 {
-    private readonly IApplicationDbContext _context;
-
-    public UpdateImpedimentoTarefaCommandHandler(IApplicationDbContext context)
-    {
-        _context = context;
-    }
-
     public async ValueTask<OperationResult> Handle(UpdateImpedimentoTarefaCommand request, CancellationToken cancellationToken)
     {
-        var impedimentoTarefa = await _context.ImpedimentoTarefas
+        var impedimentoTarefa = await context.ImpedimentoTarefas
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
         if (impedimentoTarefa is null)
@@ -20,11 +13,9 @@ public sealed class UpdateImpedimentoTarefaCommandHandler : IRequestHandler<Upda
         }
 
         impedimentoTarefa = ImpedimentoTarefa.Update(impedimentoTarefa, request.Descricao, request.IdTarefa, request.IdImpedimento);
-        _context.ImpedimentoTarefas.Update(impedimentoTarefa);
+        context.ImpedimentoTarefas.Update(impedimentoTarefa);
 
-        var success = await _context.SaveChangesAsync(cancellationToken);
-
-        var result = success ? OperationResult.Success : OperationResult.Failed;
+        var result = await context.SaveChangesAsync(cancellationToken);
 
         return result;
     }

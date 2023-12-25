@@ -1,17 +1,10 @@
 ﻿namespace Cpnucleo.Application.Queries;
 
-public sealed class GetRecursoTarefaQueryHandler : IRequestHandler<GetRecursoTarefaQuery, GetRecursoTarefaViewModel>
+public sealed class GetRecursoTarefaQueryHandler(IApplicationDbContext context) : IRequestHandler<GetRecursoTarefaQuery, GetRecursoTarefaViewModel>
 {
-    private readonly IApplicationDbContext _context;
-
-    public GetRecursoTarefaQueryHandler(IApplicationDbContext context)
-    {
-        _context = context;
-    }
-
     public async ValueTask<GetRecursoTarefaViewModel> Handle(GetRecursoTarefaQuery request, CancellationToken cancellationToken)
     {
-        var recursoTarefa = await _context.RecursoTarefas
+        var recursoTarefa = await context.RecursoTarefas
             .AsNoTracking()
             .Include(x => x.Recurso)
             .Include(x => x.Tarefa)
@@ -21,9 +14,9 @@ public sealed class GetRecursoTarefaQueryHandler : IRequestHandler<GetRecursoTar
 
         if (recursoTarefa is null)
         {
-            return new GetRecursoTarefaViewModel { OperationResult = OperationResult.NotFound };
+            return new GetRecursoTarefaViewModel(OperationResult.NotFound);
         }
 
-        return new GetRecursoTarefaViewModel { RecursoTarefa = recursoTarefa, OperationResult = OperationResult.Success };
+        return new GetRecursoTarefaViewModel(OperationResult.Success, recursoTarefa);
     }
 }

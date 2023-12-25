@@ -1,14 +1,7 @@
 ﻿namespace Cpnucleo.Application.Commands;
 
-public sealed class CreateTarefaCommandHandler : IRequestHandler<CreateTarefaCommand, OperationResult>
+public sealed class CreateTarefaCommandHandler(IApplicationDbContext context) : IRequestHandler<CreateTarefaCommand, OperationResult>
 {
-    private readonly IApplicationDbContext _context;
-
-    public CreateTarefaCommandHandler(IApplicationDbContext context)
-    {
-        _context = context;
-    }
-
     public async ValueTask<OperationResult> Handle(CreateTarefaCommand request, CancellationToken cancellationToken)
     {
         var tarefa = Tarefa.Create(request.Nome,
@@ -20,11 +13,9 @@ public sealed class CreateTarefaCommandHandler : IRequestHandler<CreateTarefaCom
                                                    request.IdWorkflow,
                                                    request.IdRecurso,
                                                    request.IdTipoTarefa);
-        _context.Tarefas.Add(tarefa);
+        context.Tarefas.Add(tarefa);
 
-        var success = await _context.SaveChangesAsync(cancellationToken);
-
-        var result = success ? OperationResult.Success : OperationResult.Failed;
+        var result = await context.SaveChangesAsync(cancellationToken);
 
         return result;
     }

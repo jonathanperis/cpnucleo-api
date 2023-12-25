@@ -2,18 +2,11 @@
 
 namespace Cpnucleo.Application.Queries;
 
-public sealed class ListTarefaQueryHandler : IRequestHandler<ListTarefaQuery, ListTarefaViewModel>
+public sealed class ListTarefaQueryHandler(IApplicationDbContext context) : IRequestHandler<ListTarefaQuery, ListTarefaViewModel>
 {
-    private readonly IApplicationDbContext _context;
-
-    public ListTarefaQueryHandler(IApplicationDbContext context)
-    {
-        _context = context;
-    }
-
     public async ValueTask<ListTarefaViewModel> Handle(ListTarefaQuery request, CancellationToken cancellationToken)
     {
-        var tarefas = await _context.Tarefas
+        var tarefas = await context.Tarefas
             .AsNoTracking()
             .Include(x => x.Projeto)
             .Include(x => x.Recurso)
@@ -26,17 +19,17 @@ public sealed class ListTarefaQueryHandler : IRequestHandler<ListTarefaQuery, Li
 
         if (tarefas is null)
         {
-            return new ListTarefaViewModel { OperationResult = OperationResult.NotFound };
+            return new ListTarefaViewModel(OperationResult.NotFound);
         }
 
         await PreencherDadosAdicionaisAsync(tarefas, cancellationToken);
 
-        return new ListTarefaViewModel { Tarefas = tarefas, OperationResult = OperationResult.Success };
+        return new ListTarefaViewModel(OperationResult.Success, tarefas);
     }
 
     private async Task PreencherDadosAdicionaisAsync(List<TarefaDto> lista, CancellationToken cancellationToken)
     {
-        var colunas = _context.Workflows.Where(x => x.Ativo).Count();
+        var colunas = context.Workflows.Where(x => x.Ativo).Count();
 
         foreach (var item in lista)
         {
@@ -45,7 +38,7 @@ public sealed class ListTarefaQueryHandler : IRequestHandler<ListTarefaQuery, Li
                 item.Workflow.TamanhoColuna = Workflow.GetTamanhoColuna(colunas);
             }
 
-            item.HorasConsumidas = _context.Apontamentos
+            item.HorasConsumidas = context.Apontamentos
                 .Where(x => x.IdRecurso == item.IdRecurso && x.IdTarefa == item.Id && x.Ativo)
                 .Sum(x => x.QtdHoras);
 
@@ -56,7 +49,7 @@ public sealed class ListTarefaQueryHandler : IRequestHandler<ListTarefaQuery, Li
                 continue;
             }
 
-            var impedimentos = await _context.ImpedimentoTarefas
+            var impedimentos = await context.ImpedimentoTarefas
                 .Where(x => x.IdTarefa == item.Id && x.Ativo)
                 .OrderBy(x => x.DataInclusao)
                 .Select(x => x.MapToDto())

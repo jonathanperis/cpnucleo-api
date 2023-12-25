@@ -1,17 +1,10 @@
 ﻿namespace Cpnucleo.Application.Commands;
 
-public sealed class UpdateRecursoCommandHandler : IRequestHandler<UpdateRecursoCommand, OperationResult>
+public sealed class UpdateRecursoCommandHandler(IApplicationDbContext context) : IRequestHandler<UpdateRecursoCommand, OperationResult>
 {
-    private readonly IApplicationDbContext _context;
-
-    public UpdateRecursoCommandHandler(IApplicationDbContext context)
-    {
-        _context = context;
-    }
-
     public async ValueTask<OperationResult> Handle(UpdateRecursoCommand request, CancellationToken cancellationToken)
     {
-        var recurso = await _context.Recursos
+        var recurso = await context.Recursos
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
         if (recurso is null)
@@ -20,11 +13,9 @@ public sealed class UpdateRecursoCommandHandler : IRequestHandler<UpdateRecursoC
         }
 
         recurso = Recurso.Update(recurso, request.Nome, request.Senha);
-        _context.Recursos.Update(recurso);
+        context.Recursos.Update(recurso);
 
-        var success = await _context.SaveChangesAsync(cancellationToken);
-
-        var result = success ? OperationResult.Success : OperationResult.Failed;
+        var result = await context.SaveChangesAsync(cancellationToken);
 
         return result;
     }

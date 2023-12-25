@@ -1,22 +1,13 @@
 ﻿namespace Cpnucleo.Application.Commands;
 
-public sealed class CreateTipoTarefaCommandHandler : IRequestHandler<CreateTipoTarefaCommand, OperationResult>
+public sealed class CreateTipoTarefaCommandHandler(IApplicationDbContext context) : IRequestHandler<CreateTipoTarefaCommand, OperationResult>
 {
-    private readonly IApplicationDbContext _context;
-
-    public CreateTipoTarefaCommandHandler(IApplicationDbContext context)
-    {
-        _context = context;
-    }
-
     public async ValueTask<OperationResult> Handle(CreateTipoTarefaCommand request, CancellationToken cancellationToken)
     {
         var tipoTarefa = TipoTarefa.Create(request.Nome, request.Image);
-        _context.TipoTarefas.Add(tipoTarefa);
+        context.TipoTarefas.Add(tipoTarefa);
 
-        var success = await _context.SaveChangesAsync(cancellationToken);
-
-        var result = success ? OperationResult.Success : OperationResult.Failed;
+        var result = await context.SaveChangesAsync(cancellationToken);
 
         return result;
     }

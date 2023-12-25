@@ -1,17 +1,10 @@
 ﻿namespace Cpnucleo.Application.Queries;
 
-public sealed class ListApontamentoQueryHandler : IRequestHandler<ListApontamentoQuery, ListApontamentoViewModel>
+public sealed class ListApontamentoQueryHandler(IApplicationDbContext context) : IRequestHandler<ListApontamentoQuery, ListApontamentoViewModel>
 {
-    private readonly IApplicationDbContext _context;
-
-    public ListApontamentoQueryHandler(IApplicationDbContext context)
-    {
-        _context = context;
-    }
-
     public async ValueTask<ListApontamentoViewModel> Handle(ListApontamentoQuery request, CancellationToken cancellationToken)
     {
-        var apontamentos = await _context.Apontamentos
+        var apontamentos = await context.Apontamentos
             .AsNoTracking()
             .Include(x => x.Tarefa)
             .Where(x => x.Ativo)
@@ -21,9 +14,9 @@ public sealed class ListApontamentoQueryHandler : IRequestHandler<ListApontament
 
         if (apontamentos is null)
         {
-            return new ListApontamentoViewModel { OperationResult = OperationResult.NotFound };
+            return new ListApontamentoViewModel(OperationResult.NotFound);
         }
 
-        return new ListApontamentoViewModel { Apontamentos = apontamentos, OperationResult = OperationResult.Success };
+        return new ListApontamentoViewModel(OperationResult.Success, apontamentos);
     }
 }

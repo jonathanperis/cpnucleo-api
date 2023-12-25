@@ -1,17 +1,10 @@
 ﻿namespace Cpnucleo.Application.Queries;
 
-public sealed class ListProjetoQueryHandler : IRequestHandler<ListProjetoQuery, ListProjetoViewModel>
+public sealed class ListProjetoQueryHandler(IApplicationDbContext context) : IRequestHandler<ListProjetoQuery, ListProjetoViewModel>
 {
-    private readonly IApplicationDbContext _context;
-
-    public ListProjetoQueryHandler(IApplicationDbContext context)
-    {
-        _context = context;
-    }
-
     public async ValueTask<ListProjetoViewModel> Handle(ListProjetoQuery request, CancellationToken cancellationToken)
     {
-        var projetos = await _context.Projetos
+        var projetos = await context.Projetos
             .AsNoTracking()
             .Include(x => x.Sistema)
             .Where(x => x.Ativo)
@@ -21,9 +14,9 @@ public sealed class ListProjetoQueryHandler : IRequestHandler<ListProjetoQuery, 
 
         if (projetos is null)
         {
-            return new ListProjetoViewModel { OperationResult = OperationResult.NotFound };
+            return new ListProjetoViewModel(OperationResult.NotFound);
         }
 
-        return new ListProjetoViewModel { Projetos = projetos, OperationResult = OperationResult.Success };
+        return new ListProjetoViewModel(OperationResult.Success, projetos);
     }
 }

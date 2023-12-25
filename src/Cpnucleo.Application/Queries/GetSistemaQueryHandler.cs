@@ -1,17 +1,10 @@
 ﻿namespace Cpnucleo.Application.Queries;
 
-public sealed class GetSistemaQueryHandler : IRequestHandler<GetSistemaQuery, GetSistemaViewModel>
+public sealed class GetSistemaQueryHandler(IApplicationDbContext context) : IRequestHandler<GetSistemaQuery, GetSistemaViewModel>
 {
-    private readonly IApplicationDbContext _context;
-
-    public GetSistemaQueryHandler(IApplicationDbContext context)
-    {
-        _context = context;
-    }
-
     public async ValueTask<GetSistemaViewModel> Handle(GetSistemaQuery request, CancellationToken cancellationToken)
     {
-        var sistema = await _context.Sistemas
+        var sistema = await context.Sistemas
             .AsNoTracking()
             .Where(x => x.Id == request.Id && x.Ativo)
             .Select(x => x.MapToDto())
@@ -19,9 +12,9 @@ public sealed class GetSistemaQueryHandler : IRequestHandler<GetSistemaQuery, Ge
 
         if (sistema is null)
         {
-            return new GetSistemaViewModel { OperationResult = OperationResult.NotFound };
+            return new GetSistemaViewModel(OperationResult.NotFound);
         }
 
-        return new GetSistemaViewModel { Sistema = sistema, OperationResult = OperationResult.Success };
+        return new GetSistemaViewModel(OperationResult.Success, sistema);
     }
 }

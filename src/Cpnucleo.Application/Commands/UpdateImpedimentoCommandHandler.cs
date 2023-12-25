@@ -1,17 +1,10 @@
 ﻿namespace Cpnucleo.Application.Commands;
 
-public sealed class UpdateImpedimentoCommandHandler : IRequestHandler<UpdateImpedimentoCommand, OperationResult>
+public sealed class UpdateImpedimentoCommandHandler(IApplicationDbContext context) : IRequestHandler<UpdateImpedimentoCommand, OperationResult>
 {
-    private readonly IApplicationDbContext _context;
-
-    public UpdateImpedimentoCommandHandler(IApplicationDbContext context)
-    {
-        _context = context;
-    }
-
     public async ValueTask<OperationResult> Handle(UpdateImpedimentoCommand request, CancellationToken cancellationToken)
     {
-        var impedimento = await _context.Impedimentos
+        var impedimento = await context.Impedimentos
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
         if (impedimento is null)
@@ -20,11 +13,9 @@ public sealed class UpdateImpedimentoCommandHandler : IRequestHandler<UpdateImpe
         }
 
         impedimento = Impedimento.Update(impedimento, request.Nome);
-        _context.Impedimentos.Update(impedimento);
+        context.Impedimentos.Update(impedimento);
 
-        var success = await _context.SaveChangesAsync(cancellationToken);
-
-        var result = success ? OperationResult.Success : OperationResult.Failed;
+        var result = await context.SaveChangesAsync(cancellationToken);
 
         return result;
     }

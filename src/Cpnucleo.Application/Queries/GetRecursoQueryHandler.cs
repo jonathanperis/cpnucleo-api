@@ -1,17 +1,10 @@
 ﻿namespace Cpnucleo.Application.Queries;
 
-public sealed class GetRecursoQueryHandler : IRequestHandler<GetRecursoQuery, GetRecursoViewModel>
+public sealed class GetRecursoQueryHandler(IApplicationDbContext context) : IRequestHandler<GetRecursoQuery, GetRecursoViewModel>
 {
-    private readonly IApplicationDbContext _context;
-
-    public GetRecursoQueryHandler(IApplicationDbContext context)
-    {
-        _context = context;
-    }
-
     public async ValueTask<GetRecursoViewModel> Handle(GetRecursoQuery request, CancellationToken cancellationToken)
     {
-        var recurso = await _context.Recursos
+        var recurso = await context.Recursos
             .AsNoTracking()
             .Where(x => x.Id == request.Id && x.Ativo)
             .Select(x => x.MapToDto())
@@ -19,9 +12,9 @@ public sealed class GetRecursoQueryHandler : IRequestHandler<GetRecursoQuery, Ge
 
         if (recurso is null)
         {
-            return new GetRecursoViewModel { OperationResult = OperationResult.NotFound };
+            return new GetRecursoViewModel(OperationResult.NotFound);
         }
 
-        return new GetRecursoViewModel { Recurso = recurso, OperationResult = OperationResult.Success };
+        return new GetRecursoViewModel(OperationResult.Success, recurso);
     }
 }

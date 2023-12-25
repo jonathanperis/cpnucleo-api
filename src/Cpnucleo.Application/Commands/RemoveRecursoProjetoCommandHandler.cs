@@ -1,17 +1,10 @@
 ﻿namespace Cpnucleo.Application.Commands;
 
-public sealed class RemoveRecursoProjetoCommandHandler : IRequestHandler<RemoveRecursoProjetoCommand, OperationResult>
+public sealed class RemoveRecursoProjetoCommandHandler(IApplicationDbContext context) : IRequestHandler<RemoveRecursoProjetoCommand, OperationResult>
 {
-    private readonly IApplicationDbContext _context;
-
-    public RemoveRecursoProjetoCommandHandler(IApplicationDbContext context)
-    {
-        _context = context;
-    }
-
     public async ValueTask<OperationResult> Handle(RemoveRecursoProjetoCommand request, CancellationToken cancellationToken)
     {
-        var recursoProjeto = await _context.RecursoProjetos
+        var recursoProjeto = await context.RecursoProjetos
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
         if (recursoProjeto is null)
@@ -20,11 +13,9 @@ public sealed class RemoveRecursoProjetoCommandHandler : IRequestHandler<RemoveR
         }
 
         recursoProjeto = RecursoProjeto.Remove(recursoProjeto);
-        _context.RecursoProjetos.Update(recursoProjeto); //JONATHAN - Soft Delete.
+        context.RecursoProjetos.Update(recursoProjeto); //JONATHAN - Soft Delete.
 
-        var success = await _context.SaveChangesAsync(cancellationToken);
-
-        var result = success ? OperationResult.Success : OperationResult.Failed;
+        var result = await context.SaveChangesAsync(cancellationToken);
 
         return result;
     }

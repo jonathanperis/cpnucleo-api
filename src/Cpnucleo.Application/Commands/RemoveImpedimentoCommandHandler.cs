@@ -1,17 +1,10 @@
 ﻿namespace Cpnucleo.Application.Commands;
 
-public sealed class RemoveImpedimentoCommandHandler : IRequestHandler<RemoveImpedimentoCommand, OperationResult>
+public sealed class RemoveImpedimentoCommandHandler(IApplicationDbContext context) : IRequestHandler<RemoveImpedimentoCommand, OperationResult>
 {
-    private readonly IApplicationDbContext _context;
-
-    public RemoveImpedimentoCommandHandler(IApplicationDbContext context)
-    {
-        _context = context;
-    }
-
     public async ValueTask<OperationResult> Handle(RemoveImpedimentoCommand request, CancellationToken cancellationToken)
     {
-        var impedimento = await _context.Impedimentos
+        var impedimento = await context.Impedimentos
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
         if (impedimento is null)
@@ -20,11 +13,9 @@ public sealed class RemoveImpedimentoCommandHandler : IRequestHandler<RemoveImpe
         }
 
         impedimento = Impedimento.Remove(impedimento);
-        _context.Impedimentos.Update(impedimento); //JONATHAN - Soft Delete.
+        context.Impedimentos.Update(impedimento); //JONATHAN - Soft Delete.
 
-        var success = await _context.SaveChangesAsync(cancellationToken);
-
-        var result = success ? OperationResult.Success : OperationResult.Failed;
+        var result = await context.SaveChangesAsync(cancellationToken);
 
         return result;
     }

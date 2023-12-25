@@ -1,17 +1,10 @@
 ﻿namespace Cpnucleo.Application.Commands;
 
-public sealed class UpdateWorkflowCommandHandler : IRequestHandler<UpdateWorkflowCommand, OperationResult>
+public sealed class UpdateWorkflowCommandHandler(IApplicationDbContext context) : IRequestHandler<UpdateWorkflowCommand, OperationResult>
 {
-    private readonly IApplicationDbContext _context;
-
-    public UpdateWorkflowCommandHandler(IApplicationDbContext context)
-    {
-        _context = context;
-    }
-
     public async ValueTask<OperationResult> Handle(UpdateWorkflowCommand request, CancellationToken cancellationToken)
     {
-        var workflow = await _context.Workflows
+        var workflow = await context.Workflows
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
         if (workflow is null)
@@ -20,11 +13,9 @@ public sealed class UpdateWorkflowCommandHandler : IRequestHandler<UpdateWorkflo
         }
 
         workflow = Workflow.Update(workflow, request.Nome, request.Ordem);
-        _context.Workflows.Update(workflow);
+        context.Workflows.Update(workflow);
 
-        var success = await _context.SaveChangesAsync(cancellationToken);
-
-        var result = success ? OperationResult.Success : OperationResult.Failed;
+        var result = await context.SaveChangesAsync(cancellationToken);
 
         return result;
     }

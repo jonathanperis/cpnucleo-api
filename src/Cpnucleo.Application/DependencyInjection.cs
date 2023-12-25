@@ -1,6 +1,4 @@
-﻿using Cpnucleo.Application.Events;
-
-namespace Cpnucleo.Application;
+﻿namespace Cpnucleo.Application;
 
 public static class DependencyInjection
 {

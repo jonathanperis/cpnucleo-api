@@ -1,17 +1,10 @@
 ﻿namespace Cpnucleo.Application.Queries;
 
-public sealed class ListRecursoTarefaByTarefaQueryHandler : IRequestHandler<ListRecursoTarefaByTarefaQuery, ListRecursoTarefaByTarefaViewModel>
+public sealed class ListRecursoTarefaByTarefaQueryHandler(IApplicationDbContext context) : IRequestHandler<ListRecursoTarefaByTarefaQuery, ListRecursoTarefaByTarefaViewModel>
 {
-    private readonly IApplicationDbContext _context;
-
-    public ListRecursoTarefaByTarefaQueryHandler(IApplicationDbContext context)
-    {
-        _context = context;
-    }
-
     public async ValueTask<ListRecursoTarefaByTarefaViewModel> Handle(ListRecursoTarefaByTarefaQuery request, CancellationToken cancellationToken)
     {
-        var recursoTarefas = await _context.RecursoTarefas
+        var recursoTarefas = await context.RecursoTarefas
             .AsNoTracking()
             .Include(x => x.Recurso)
             .Include(x => x.Tarefa)
@@ -22,9 +15,9 @@ public sealed class ListRecursoTarefaByTarefaQueryHandler : IRequestHandler<List
 
         if (recursoTarefas is null)
         {
-            return new ListRecursoTarefaByTarefaViewModel { OperationResult = OperationResult.NotFound };
+            return new ListRecursoTarefaByTarefaViewModel(OperationResult.NotFound);
         }
 
-        return new ListRecursoTarefaByTarefaViewModel { RecursoTarefas = recursoTarefas, OperationResult = OperationResult.Success };
+        return new ListRecursoTarefaByTarefaViewModel(OperationResult.Success, recursoTarefas);
     }
 }
