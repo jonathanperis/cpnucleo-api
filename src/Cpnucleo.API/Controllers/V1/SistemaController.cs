@@ -5,15 +5,8 @@
 [ApiVersion("1")]
 [Produces("application/json")]
 [Route("api/v{version:apiVersion}/[controller]")]
-public class SistemaController : ControllerBase
+public class SistemaController(ISender sender) : ControllerBase
 {
-    private readonly ISender _sender;
-
-    public SistemaController(ISender sender)
-    {
-        _sender = sender;
-    }
-
     /// <summary>
     /// Listar sistemas
     /// </summary>
@@ -27,7 +20,7 @@ public class SistemaController : ControllerBase
     [Route("ListSistema")]
     public async Task<ActionResult<ListSistemaViewModel>> ListSistema([FromBody] ListSistemaQuery query)
     {
-        return await _sender.Send(query);
+        return await sender.Send(query);
     }
 
     /// <summary>
@@ -43,7 +36,7 @@ public class SistemaController : ControllerBase
     [Route("GetSistema")]
     public async Task<ActionResult<GetSistemaViewModel>> GetSistema([FromBody] GetSistemaQuery query)
     {
-        return await _sender.Send(query);
+        return await sender.Send(query);
     }
 
     /// <summary>
@@ -59,7 +52,7 @@ public class SistemaController : ControllerBase
     [Route("CreateSistema")]
     public async Task<ActionResult<OperationResult>> CreateSistema([FromBody] CreateSistemaCommand command)
     {
-        return await _sender.Send(command);
+        return await sender.Send(command);
     }
 
     /// <summary>
@@ -75,7 +68,7 @@ public class SistemaController : ControllerBase
     [Route("UpdateSistema")]
     public async Task<ActionResult<OperationResult>> UpdateSistema([FromBody] UpdateSistemaCommand command)
     {
-        return await _sender.Send(command);
+        return await sender.Send(command);
     }
 
     /// <summary>
@@ -91,6 +84,6 @@ public class SistemaController : ControllerBase
     [Route("RemoveSistema")]
     public async Task<ActionResult<OperationResult>> RemoveSistema([FromBody] RemoveSistemaCommand command)
     {
-        return await _sender.Send(command);
+        return await sender.Send(command);
     }
 }

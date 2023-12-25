@@ -5,15 +5,8 @@
 [ApiVersion("2")]
 [Produces("application/json")]
 [Route("api/v{version:apiVersion}/[controller]")]
-public class RecursoController : ControllerBase
+public class RecursoController(ISender sender) : ControllerBase
 {
-    private readonly ISender _sender;
-
-    public RecursoController(ISender sender)
-    {
-        _sender = sender;
-    }
-
     /// <summary>
     /// Listar recursos
     /// </summary>
@@ -27,7 +20,7 @@ public class RecursoController : ControllerBase
     [Route("ListRecurso")]
     public async Task<ActionResult<ListRecursoViewModel>> ListRecurso([FromBody] ListRecursoQuery query)
     {
-        return await _sender.Send(query);
+        return await sender.Send(query);
     }
 
     /// <summary>
@@ -43,7 +36,7 @@ public class RecursoController : ControllerBase
     [Route("GetRecurso")]
     public async Task<ActionResult<GetRecursoViewModel>> GetRecurso([FromBody] GetRecursoQuery query)
     {
-        return await _sender.Send(query);
+        return await sender.Send(query);
     }
 
     /// <summary>
@@ -59,7 +52,7 @@ public class RecursoController : ControllerBase
     [Route("CreateRecurso")]
     public async Task<ActionResult<OperationResult>> CreateRecurso([FromBody] CreateRecursoCommand command)
     {
-        return await _sender.Send(command);
+        return await sender.Send(command);
     }
 
     /// <summary>
@@ -75,7 +68,7 @@ public class RecursoController : ControllerBase
     [Route("UpdateRecurso")]
     public async Task<ActionResult<OperationResult>> UpdateRecurso([FromBody] UpdateRecursoCommand command)
     {
-        return await _sender.Send(command);
+        return await sender.Send(command);
     }
 
     /// <summary>
@@ -91,6 +84,6 @@ public class RecursoController : ControllerBase
     [Route("RemoveRecurso")]
     public async Task<ActionResult<OperationResult>> RemoveRecurso([FromBody] RemoveRecursoCommand command)
     {
-        return await _sender.Send(command);
+        return await sender.Send(command);
     }
 }

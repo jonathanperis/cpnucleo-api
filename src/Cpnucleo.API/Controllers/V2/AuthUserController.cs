@@ -4,15 +4,8 @@
 [ApiVersion("2")]
 [Produces("application/json")]
 [Route("api/v{version:apiVersion}/[controller]")]
-public class AuthUserController : ControllerBase
+public class AuthUserController(ISender sender) : ControllerBase
 {
-    private readonly ISender _sender;
-
-    public AuthUserController(ISender sender)
-    {
-        _sender = sender;
-    }
-
     /// <summary>
     /// Autenticar Usuário
     /// </summary>
@@ -26,6 +19,6 @@ public class AuthUserController : ControllerBase
     [Route("AuthUser")]
     public async Task<ActionResult<AuthUserViewModel>> AuthUser([FromBody] AuthUserQuery query)
     {
-        return await _sender.Send(query);
+        return await sender.Send(query);
     }
 }

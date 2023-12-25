@@ -5,15 +5,8 @@
 [ApiVersion("2")]
 [Produces("application/json")]
 [Route("api/v{version:apiVersion}/[controller]")]
-public class WorkflowController : ControllerBase
+public class WorkflowController(ISender sender) : ControllerBase
 {
-    private readonly ISender _sender;
-
-    public WorkflowController(ISender sender)
-    {
-        _sender = sender;
-    }
-
     /// <summary>
     /// Listar workflows
     /// </summary>
@@ -27,7 +20,7 @@ public class WorkflowController : ControllerBase
     [Route("ListWorkflow")]
     public async Task<ActionResult<ListWorkflowViewModel>> ListWorkflow([FromBody] ListWorkflowQuery query)
     {
-        return await _sender.Send(query);
+        return await sender.Send(query);
     }
 
     /// <summary>
@@ -43,7 +36,7 @@ public class WorkflowController : ControllerBase
     [Route("GetWorkflow")]
     public async Task<ActionResult<GetWorkflowViewModel>> GetWorkflow([FromBody] GetWorkflowQuery query)
     {
-        return await _sender.Send(query);
+        return await sender.Send(query);
     }
 
     /// <summary>
@@ -59,7 +52,7 @@ public class WorkflowController : ControllerBase
     [Route("CreateWorkflow")]
     public async Task<ActionResult<OperationResult>> CreateWorkflow([FromBody] CreateWorkflowCommand command)
     {
-        return await _sender.Send(command);
+        return await sender.Send(command);
     }
 
     /// <summary>
@@ -75,7 +68,7 @@ public class WorkflowController : ControllerBase
     [Route("UpdateWorkflow")]
     public async Task<ActionResult<OperationResult>> UpdateWorkflow([FromBody] UpdateWorkflowCommand command)
     {
-        return await _sender.Send(command);
+        return await sender.Send(command);
     }
 
     /// <summary>
@@ -91,6 +84,6 @@ public class WorkflowController : ControllerBase
     [Route("RemoveWorkflow")]
     public async Task<ActionResult<OperationResult>> RemoveWorkflow([FromBody] RemoveWorkflowCommand command)
     {
-        return await _sender.Send(command);
+        return await sender.Send(command);
     }
 }

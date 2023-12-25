@@ -5,15 +5,8 @@
 [ApiVersion("2")]
 [Produces("application/json")]
 [Route("api/v{version:apiVersion}/[controller]")]
-public class ProjetoController : ControllerBase
+public class ProjetoController(ISender sender) : ControllerBase
 {
-    private readonly ISender _sender;
-
-    public ProjetoController(ISender sender)
-    {
-        _sender = sender;
-    }
-
     /// <summary>
     /// Listar projetos
     /// </summary>
@@ -27,7 +20,7 @@ public class ProjetoController : ControllerBase
     [Route("ListProjeto")]
     public async Task<ActionResult<ListProjetoViewModel>> ListProjeto([FromBody] ListProjetoQuery query)
     {
-        return await _sender.Send(query);
+        return await sender.Send(query);
     }
 
     /// <summary>
@@ -43,7 +36,7 @@ public class ProjetoController : ControllerBase
     [Route("GetProjeto")]
     public async Task<ActionResult<GetProjetoViewModel>> GetProjeto([FromBody] GetProjetoQuery query)
     {
-        return await _sender.Send(query);
+        return await sender.Send(query);
     }
 
     /// <summary>
@@ -59,7 +52,7 @@ public class ProjetoController : ControllerBase
     [Route("CreateProjeto")]
     public async Task<ActionResult<OperationResult>> CreateProjeto([FromBody] CreateProjetoCommand command)
     {
-        return await _sender.Send(command);
+        return await sender.Send(command);
     }
 
     /// <summary>
@@ -75,7 +68,7 @@ public class ProjetoController : ControllerBase
     [Route("UpdateProjeto")]
     public async Task<ActionResult<OperationResult>> UpdateProjeto([FromBody] UpdateProjetoCommand command)
     {
-        return await _sender.Send(command);
+        return await sender.Send(command);
     }
 
     /// <summary>
@@ -91,6 +84,6 @@ public class ProjetoController : ControllerBase
     [Route("RemoveProjeto")]
     public async Task<ActionResult<OperationResult>> RemoveProjeto([FromBody] RemoveProjetoCommand command)
     {
-        return await _sender.Send(command);
+        return await sender.Send(command);
     }
 }

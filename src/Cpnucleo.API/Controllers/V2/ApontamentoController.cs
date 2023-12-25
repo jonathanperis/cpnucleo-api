@@ -5,15 +5,8 @@
 [ApiVersion("2")]
 [Produces("application/json")]
 [Route("api/v{version:apiVersion}/[controller]")]
-public class ApontamentoController : ControllerBase
+public class ApontamentoController(ISender sender) : ControllerBase
 {
-    private readonly ISender _sender;
-
-    public ApontamentoController(ISender sender)
-    {
-        _sender = sender;
-    }
-
     /// <summary>
     /// Listar apontamentos
     /// </summary>
@@ -27,7 +20,7 @@ public class ApontamentoController : ControllerBase
     [Route("ListApontamento")]
     public async Task<ActionResult<ListApontamentoViewModel>> ListApontamento([FromBody] ListApontamentoQuery query)
     {
-        return await _sender.Send(query);
+        return await sender.Send(query);
     }
 
     /// <summary>
@@ -43,7 +36,7 @@ public class ApontamentoController : ControllerBase
     [Route("GetApontamento")]
     public async Task<ActionResult<GetApontamentoViewModel>> GetApontamento([FromBody] GetApontamentoQuery query)
     {
-        return await _sender.Send(query);
+        return await sender.Send(query);
     }
 
     /// <summary>
@@ -59,7 +52,7 @@ public class ApontamentoController : ControllerBase
     [Route("GetApontamentoByRecurso")]
     public async Task<ActionResult<ListApontamentoByRecursoViewModel>> GetApontamentoByRecurso([FromBody] ListApontamentoByRecursoQuery query)
     {
-        return await _sender.Send(query);
+        return await sender.Send(query);
     }
 
     /// <summary>
@@ -75,7 +68,7 @@ public class ApontamentoController : ControllerBase
     [Route("CreateApontamento")]
     public async Task<ActionResult<OperationResult>> CreateApontamento([FromBody] CreateApontamentoCommand command)
     {
-        return await _sender.Send(command);
+        return await sender.Send(command);
     }
 
     /// <summary>
@@ -91,7 +84,7 @@ public class ApontamentoController : ControllerBase
     [Route("UpdateApontamento")]
     public async Task<ActionResult<OperationResult>> UpdateApontamento([FromBody] UpdateApontamentoCommand command)
     {
-        return await _sender.Send(command);
+        return await sender.Send(command);
     }
 
     /// <summary>
@@ -107,6 +100,6 @@ public class ApontamentoController : ControllerBase
     [Route("RemoveApontamento")]
     public async Task<ActionResult<OperationResult>> RemoveApontamento([FromBody] RemoveApontamentoCommand command)
     {
-        return await _sender.Send(command);
+        return await sender.Send(command);
     }
 }

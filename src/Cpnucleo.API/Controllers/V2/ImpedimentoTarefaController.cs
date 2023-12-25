@@ -5,15 +5,8 @@
 [ApiVersion("2")]
 [Produces("application/json")]
 [Route("api/v{version:apiVersion}/[controller]")]
-public class ImpedimentoTarefaController : ControllerBase
+public class ImpedimentoTarefaController(ISender sender) : ControllerBase
 {
-    private readonly ISender _sender;
-
-    public ImpedimentoTarefaController(ISender sender)
-    {
-        _sender = sender;
-    }
-
     /// <summary>
     /// Listar impedimentos de tarefas
     /// </summary>
@@ -27,7 +20,7 @@ public class ImpedimentoTarefaController : ControllerBase
     [Route("ListImpedimentoTarefa")]
     public async Task<ActionResult<ListImpedimentoTarefaViewModel>> ListImpedimentoTarefa([FromBody] ListImpedimentoTarefaQuery query)
     {
-        return await _sender.Send(query);
+        return await sender.Send(query);
     }
 
     /// <summary>
@@ -43,7 +36,7 @@ public class ImpedimentoTarefaController : ControllerBase
     [Route("GetImpedimentoTarefa")]
     public async Task<ActionResult<GetImpedimentoTarefaViewModel>> GetImpedimentoTarefa([FromBody] GetImpedimentoTarefaQuery query)
     {
-        return await _sender.Send(query);
+        return await sender.Send(query);
     }
 
     /// <summary>
@@ -59,7 +52,7 @@ public class ImpedimentoTarefaController : ControllerBase
     [Route("GetImpedimentoTarefaByTarefa")]
     public async Task<ActionResult<ListImpedimentoTarefaByTarefaViewModel>> GetImpedimentoTarefaByTarefa([FromBody] ListImpedimentoTarefaByTarefaQuery query)
     {
-        return await _sender.Send(query);
+        return await sender.Send(query);
     }
 
     /// <summary>
@@ -75,7 +68,7 @@ public class ImpedimentoTarefaController : ControllerBase
     [Route("CreateImpedimentoTarefa")]
     public async Task<ActionResult<OperationResult>> CreateImpedimentoTarefa([FromBody] CreateImpedimentoTarefaCommand command)
     {
-        return await _sender.Send(command);
+        return await sender.Send(command);
     }
 
     /// <summary>
@@ -91,7 +84,7 @@ public class ImpedimentoTarefaController : ControllerBase
     [Route("UpdateImpedimentoTarefa")]
     public async Task<ActionResult<OperationResult>> UpdateImpedimentoTarefa([FromBody] UpdateImpedimentoTarefaCommand command)
     {
-        return await _sender.Send(command);
+        return await sender.Send(command);
     }
 
     /// <summary>
@@ -107,6 +100,6 @@ public class ImpedimentoTarefaController : ControllerBase
     [Route("RemoveImpedimentoTarefa")]
     public async Task<ActionResult<OperationResult>> RemoveImpedimentoTarefa([FromBody] RemoveImpedimentoTarefaCommand command)
     {
-        return await _sender.Send(command);
+        return await sender.Send(command);
     }
 }

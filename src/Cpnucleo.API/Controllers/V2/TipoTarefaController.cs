@@ -5,15 +5,8 @@
 [ApiVersion("2")]
 [Produces("application/json")]
 [Route("api/v{version:apiVersion}/[controller]")]
-public class TipoTarefaController : ControllerBase
+public class TipoTarefaController(ISender sender) : ControllerBase
 {
-    private readonly ISender _sender;
-
-    public TipoTarefaController(ISender sender)
-    {
-        _sender = sender;
-    }
-
     /// <summary>
     /// Listar tipos de tarefa
     /// </summary>
@@ -27,7 +20,7 @@ public class TipoTarefaController : ControllerBase
     [Route("ListTipoTarefa")]
     public async Task<ActionResult<ListTipoTarefaViewModel>> ListTipoTarefa([FromBody] ListTipoTarefaQuery query)
     {
-        return await _sender.Send(query);
+        return await sender.Send(query);
     }
 
     /// <summary>
@@ -43,7 +36,7 @@ public class TipoTarefaController : ControllerBase
     [Route("GetTipoTarefa")]
     public async Task<ActionResult<GetTipoTarefaViewModel>> GetTipoTarefa([FromBody] GetTipoTarefaQuery query)
     {
-        return await _sender.Send(query);
+        return await sender.Send(query);
     }
 
     /// <summary>
@@ -59,7 +52,7 @@ public class TipoTarefaController : ControllerBase
     [Route("CreateTipoTarefa")]
     public async Task<ActionResult<OperationResult>> CreateTipoTarefa([FromBody] CreateTipoTarefaCommand command)
     {
-        return await _sender.Send(command);
+        return await sender.Send(command);
     }
 
     /// <summary>
@@ -75,7 +68,7 @@ public class TipoTarefaController : ControllerBase
     [Route("UpdateTipoTarefa")]
     public async Task<ActionResult<OperationResult>> UpdateTipoTarefa([FromBody] UpdateTipoTarefaCommand command)
     {
-        return await _sender.Send(command);
+        return await sender.Send(command);
     }
 
     /// <summary>
@@ -91,6 +84,6 @@ public class TipoTarefaController : ControllerBase
     [Route("RemoveTipoTarefa")]
     public async Task<ActionResult<OperationResult>> RemoveTipoTarefa([FromBody] RemoveTipoTarefaCommand command)
     {
-        return await _sender.Send(command);
+        return await sender.Send(command);
     }
 }
