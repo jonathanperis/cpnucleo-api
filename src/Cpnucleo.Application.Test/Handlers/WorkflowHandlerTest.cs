@@ -52,7 +52,7 @@ public class WorkflowHandlerTest
 
         // Assert
         Assert.True(response.Workflows != null);
-        Assert.True(response.Workflows.Any());
+        Assert.True(response.Workflows.Count != 0);
     }
 
     [Fact]

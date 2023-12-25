@@ -53,7 +53,7 @@ public class SistemaHandlerTest
 
         // Assert
         Assert.True(response.Sistemas != null);
-        Assert.True(response.Sistemas.Any());
+        Assert.True(response.Sistemas.Count != 0);
     }
 
     [Fact]

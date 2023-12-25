@@ -52,7 +52,7 @@ public class TipoTarefaHandlerTest
 
         // Assert
         Assert.True(response.TipoTarefas != null);
-        Assert.True(response.TipoTarefas.Any());
+        Assert.True(response.TipoTarefas.Count != 0);
     }
 
     [Fact]

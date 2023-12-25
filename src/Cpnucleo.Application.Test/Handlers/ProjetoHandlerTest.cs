@@ -54,7 +54,7 @@ public class ProjetoHandlerTest
 
         // Assert
         Assert.True(response.Projetos != null);
-        Assert.True(response.Projetos.Any());
+        Assert.True(response.Projetos.Count != 0);
     }
 
     [Fact]

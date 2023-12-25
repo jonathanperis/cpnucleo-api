@@ -52,7 +52,7 @@ public class RecursoHandlerTest
 
         // Assert
         Assert.True(response.Recursos != null);
-        Assert.True(response.Recursos.Any());
+        Assert.True(response.Recursos.Count != 0);
     }
 
     [Fact]

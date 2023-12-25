@@ -55,7 +55,7 @@ public class ApontamentoHandlerTest
 
         // Assert
         Assert.True(response.Apontamentos != null);
-        Assert.True(response.Apontamentos.Any());
+        Assert.True(response.Apontamentos.Count != 0);
     }
 
     [Fact]
@@ -123,6 +123,6 @@ public class ApontamentoHandlerTest
 
         // Assert
         Assert.True(response.Apontamentos != null);
-        Assert.True(response.Apontamentos.Any());
+        Assert.True(response.Apontamentos.Count != 0);
     }
 }

@@ -55,7 +55,7 @@ public class RecursoProjetoHandlerTest
 
         // Assert
         Assert.True(response.RecursoProjetos != null);
-        Assert.True(response.RecursoProjetos.Any());
+        Assert.True(response.RecursoProjetos.Count != 0);
     }
 
     [Fact]
@@ -123,6 +123,6 @@ public class RecursoProjetoHandlerTest
 
         // Assert
         Assert.True(response.RecursoProjetos != null);
-        Assert.True(response.RecursoProjetos.Any());
+        Assert.True(response.RecursoProjetos.Count != 0);
     }
 }

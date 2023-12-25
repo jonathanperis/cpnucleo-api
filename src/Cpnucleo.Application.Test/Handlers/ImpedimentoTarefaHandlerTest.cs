@@ -55,7 +55,7 @@ public class ImpedimentoTarefaHandlerTest
 
         // Assert
         Assert.True(response.ImpedimentoTarefas != null);
-        Assert.True(response.ImpedimentoTarefas.Any());
+        Assert.True(response.ImpedimentoTarefas.Count != 0);
     }
 
     [Fact]
@@ -123,6 +123,6 @@ public class ImpedimentoTarefaHandlerTest
 
         // Assert
         Assert.True(response.ImpedimentoTarefas != null);
-        Assert.True(response.ImpedimentoTarefas.Any());
+        Assert.True(response.ImpedimentoTarefas.Count != 0);
     }
 }

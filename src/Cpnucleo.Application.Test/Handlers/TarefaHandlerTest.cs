@@ -57,7 +57,7 @@ public class TarefaHandlerTest
 
         // Assert
         Assert.True(response.Tarefas != null);
-        Assert.True(response.Tarefas.Any());
+        Assert.True(response.Tarefas.Count != 0);
     }
 
     [Fact]
@@ -153,6 +153,6 @@ public class TarefaHandlerTest
 
         // Assert
         Assert.True(response.Tarefas != null);
-        Assert.True(response.Tarefas.Any());
+        Assert.True(response.Tarefas.Count != 0);
     }
 }

@@ -55,7 +55,7 @@ public class RecursoTarefaHandlerTest
 
         // Assert
         Assert.True(response.RecursoTarefas != null);
-        Assert.True(response.RecursoTarefas.Any());
+        Assert.True(response.RecursoTarefas.Count != 0);
     }
 
     [Fact]
@@ -123,6 +123,6 @@ public class RecursoTarefaHandlerTest
 
         // Assert
         Assert.True(response.RecursoTarefas != null);
-        Assert.True(response.RecursoTarefas.Any());
+        Assert.True(response.RecursoTarefas.Count != 0);
     }
 }

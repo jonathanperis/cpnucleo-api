@@ -52,7 +52,7 @@ public class ImpedimentoHandlerTest
 
         // Assert
         Assert.True(response.Impedimentos != null);
-        Assert.True(response.Impedimentos.Any());
+        Assert.True(response.Impedimentos.Count != 0);
     }
 
     [Fact]
